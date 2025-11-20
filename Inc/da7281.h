@@ -62,13 +62,13 @@
 
 /*Register Address to Store Waveform Memory*/
 typedef enum {
-    DA7281_REG_SNP_MEM_0 =                      UINT8_C(0x84),
-    DA7281_REG_SNP_MEM_1 =                      UINT8_C(0x85),
-    DA7281_REG_SNP_MEM_2 =                      UINT8_C(0x86),
-    DA7281_REG_SNP_MEM_98 =                     UINT8_C(0xE6),
-    DA7281_REG_SNP_MEM_99 =                     UINT8_C(0xE7),
+    /*The waveform memory structure has a 100-byte capacity for storing snippets, frames, and sequences
+    SNP_MEM_x (where x = 0 to 99)*/
+    DA7281_REG_SNP_MEM_0 =                      UINT8_C(0x84), //Start address
+    DA7281_REG_SNP_MEM_1,
+    DA7281_REG_SNP_MEM_2,
+    DA7281_REG_SNP_MEM_98,
+    DA7281_REG_SNP_MEM_99 =                     UINT8_C(0xE7) //End address
 } da7281_snp_mem_t;
-
-git
 
 
