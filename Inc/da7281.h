@@ -71,4 +71,73 @@ typedef enum {
     DA7281_REG_SNP_MEM_99 =                     UINT8_C(0xE7) //End address
 } da7281_snp_mem_t;
 
+/***************************ENUMERATION DEFINITIONS************************/
+
+/*
+*@brief IRQ Events
+*/
+typedef enum {
+    E_SEQ_CONTINUE =                            UINT8_C(0x00), /* IRQ indicating that playback of a new sequence has occurred
+                                                                  because SEQ_CONTINUE is set to 1 */
+
+    E_UVLO =                                    UINT8_C(0x01), /* Under-voltage fault, supply below the UVLO threshold
+                                                                  Clear to attempt restart */
+
+    E_SEQ_DONE =                                UINT8_C(0x02), /* IRQ indicating that sequence playback from waveform memory
+                                                                  is complete */
+
+    E_OVERTEMP_CRIT =                           UINT8_C(0x03), /* Critical chip temperature event, chip temperature has exceeded
+                                                                  the critical limit of 125 °C */
+
+    E_SEQ_FAULT =                               UINT8_C(0x04), /* Sequence faults: SEQ_ID_FAULT, memory fault or PWM fault
+                                                                  Read IRQ_EVENT_SEQ_DIAG for diagnostic information */
+
+    E_WARNING =                                 UINT8_C(0x05), /* System warnings
+                                                                  Read IRQ_EVENT_WARNING_DIAG for warning diagnostic */
+
+    E_ACTUATOR_FAULT =                          UINT8_C(0x06), /* Issue detected with the actuator impedance, BEMF amplitude,
+                                                                  or resonant frequency */
+
+    E_OC_FAULT =                                UINT8_C(0x07)  /* Over-current / short-circuit fault on the OUTP or OUTN pin */
+} da7281_irq_events_t
+
+/*
+*@brief IRQ Event Warnings
+*/
+typedef enum {
+    E_OVERTEMP_WARN =                           UINT8_C(0x03), /* Over-temperature warning, chip temperature has exceeded
+                                                                  the warning limit of 105 °C (write 1 to E_WARNING to clear) */
+
+    E_MEM_TYPE =                                UINT8_C(0x04), /* Indicates that the memory data type configured in register 
+                                                                  MEM_DATA_SIGNED does not match the acceleration configuration
+                                                                  (ACCELERATION_EN) */
+
+    E_LIM_DRIVE_ACC =                           UINT8_C(0x06), /* IRQ indicating that acceleration is limited because the power
+                                                                  supply level is lower than required for the acceleration target */
+
+    E_LIM_DRIVE =                               UINT8_C(0x07)  /* IRQ indicating that playback is limited because the power supply
+                                                                  level is lower than the sequence target*/
+} da7281_irq_warnings_t;
+
+/*
+*@brief IRQ Event Sequences
+*/
+typedef enum {
+    E_PWM_FAULT =                               UINT8_C(0x05), /* IRQ indicating that the PWM input signal has timed out
+                                                                  write 1 to E_SEQ_FAULT to clear */
+
+    E_MEM_FAULT =                               UINT8_C(0x06), /* Indicates that the Waveform Memory is corrupted
+                                                                  write 1 to E_SEQ_FAULT to clear */
+
+    E_SEQ_ID_FAULT =                            UINT8_C(0x07)  /* IRQ indicating that requested sequence ID configured
+                                                                  in PS_SEQ_ID is not valid
+                                                                  write 1 to E_SEQ_FAULT to clear */
+} da7281_irq_sequence_t;
+
+/*
+*@breif IRQ Status
+*/
+typedef enum {
+
+}
 
