@@ -71,7 +71,7 @@ typedef enum {
     DA7281_REG_SNP_MEM_99 =                     UINT8_C(0xE7) //End address
 } da7281_snp_mem_t;
 
-/***************************ENUMERATION DEFINITIONS************************/
+/***************************REGISTER BIT DEFINITIONS************************/
 
 /*
 *@brief IRQ Events
@@ -214,5 +214,18 @@ typedef enum{
     ACTUATOR_TYPE =                             UINT8_C(0x05), /* Specifies actuator type: LRA or ERM */
 
     EMBEDDED_MODE =                             UINT8_C(0x07)  /* Embedded operation enable */
-} da7281_top_cfg1;
+} da7281_top_cfg1_t;
+
+/*
+*@breif DA7281 TOP Configuration 2
+*/
+typedef enum{
+    FULL_BRAKE_THR =                            UINT8_C(0x00), /* Full-brake threshold for PWM mode with step size 6.66% */
+
+    MEM_DATA_SIGNED =                           UINT8_C(0x04), /* Memory data format; set according to the value of ACCELERATION_EN*/
+} da7281_top_cfg2_t;
+
+/*
+*@breif 
+*/
 
