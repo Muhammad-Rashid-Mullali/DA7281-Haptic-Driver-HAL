@@ -138,6 +138,81 @@ typedef enum {
 *@breif IRQ Status
 */
 typedef enum {
+    STA_SEQ_CONTINUE =                          UINT8_C(0x00), /* Continuous sequence status */
 
+    STA_UVLO_VBAT_OK =                          UINT8_C(0x01), /* UVLO output status: 0 during normal operation
+                                                                  1 if thereis a UVLO event */
+
+    STA_PAT_DONE =                              UINT8_C(0x02), /* Memory based sequence status */
+
+    STA_OVERTEMP_CRIT =                         UINT8_C(0x03), /* Over-temperature status */
+
+    STA_PAT_FAULT =                             UINT8_C(0x04), /* Sequence faults status */
+
+    STA_WARNING =                               UINT8_C(0x05), /* System warnings status */
+
+    STA_ACTUATOR =                              UINT8_C(0x06), /* Actuator fault status */
+
+    STA_OC =                                    UINT8_C(0x07)  /* Over-current / short circuit fault status */
+} da7281_irq_status_t;
+
+/*
+*@brief IRQ Masks
+*/
+typedef enum{
+    SEQ_CONTINUE_M =                            UINT8_C(0x00), /* Continuous sequence interrupt mask */
+
+    E_UVLO_M =                                  UINT8_C(0x01), /* Soft shutdown fault mask */
+
+    SEQ_DONE_M =                                UINT8_C(0x02), /* Memory based sequence interrupt mask */
+
+    OVERTEMP_CRIT_M =                           UINT8_C(0x03), /* Over-temperature fault mask */
+
+    SEQ_FAULT_M =                               UINT8_C(0x04), /* Sequence faults mask */
+
+    WARNING_M =                                 UINT8_C(0x05), /* System warnings mask */
+
+    ACTUATOR_M =                                UINT8_C(0x06), /* Actuator fault mask */
+
+    OC_M =                                      UINT8_C(0x07)  /* Over-current / short circuit fault mask */
+} da7281_irq_mask_t;
+
+/*
+*@brief I2C Specific
+*/
+typedef enum{
+    IF_BASE_ADDR =                              UINT8_C(0X00), /* I2C base address */
+
+    I2C_TO_ENABLE =                             UINT8_C(0x06), /* I2C timeout enable. If there are no negative edges on
+                                                                  SCL for approx. 35 ms, the slave resets */
+
+    I2C_WR_MODE =                               UINT8_C(0X07)  /* I2C write mode */
+} da7281_i2c_t;
+
+/*
+*@brief Resonant Frequency
+*/
+typedef enum{
+    
 }
+
+/*
+*@breif DA7281 TOP Configuration 1
+*/
+typedef enum{
+    AMP_PID_EN =                                UINT8_C(0x00), /* Enable Amplitude PID */
+
+    RAPID_STOP_EN =                             UINT8_C(0x01), /* Enable Rapid Stop */
+
+    ACCELERATION_EN =                           UINT8_C(0x02), /* Enable Active Acceleration */
+
+    FREQ_TRACK_EN =                             UINT8_C(0x03), /* Enable resonant frequency tracking; ignored in ERM mode */
+    
+    BEMF_SENSE_EN =                             UINT8_C(0x04), /* Enable internal loop computations; should be disabled only in
+                                                                  custom waveform and wideband operation */
+
+    ACTUATOR_TYPE =                             UINT8_C(0x05), /* Specifies actuator type: LRA or ERM */
+
+    EMBEDDED_MODE =                             UINT8_C(0x07)  /* Embedded operation enable */
+} da7281_top_cfg1;
 
