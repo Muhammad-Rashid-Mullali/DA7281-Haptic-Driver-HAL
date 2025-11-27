@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include "da7281_bit_defs.h"
 
 #define DA7281_BOOL_TRUE                        UINT8_C(0x01)
 #define DA7281_BOOL_FALSE                       UINT8_C(0x00)
@@ -217,4 +218,7 @@ typedef enum{
 /*
 *@breif 
 */
+
+
+uint8_t da7281_init(da7281_handle *handle);
 

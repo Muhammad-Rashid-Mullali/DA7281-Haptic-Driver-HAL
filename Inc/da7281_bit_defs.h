@@ -162,3 +162,14 @@ typedef enum{
     DA7281_HBRIDGE_ERC_HS_TRIM_10 =                 UINT8_C(0x10), /* High side Edge Rate Control 75mV/ns */
     DA7281_HBRIDGE_ERC_HS_TRIM_11 =                 UINT8_C(0x11)  /* High side Edge Rate Control 100mV/ns (Default)*/
 }
+
+/*
+*@brief Device Structure Handle
+*/
+struct da7281_handle{
+
+    void *i2c_rslt;
+    uint8_t i2c_read;
+    uint8_t i2c_write;
+    uint8_t delay;
+};
