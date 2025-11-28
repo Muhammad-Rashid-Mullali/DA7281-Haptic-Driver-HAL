@@ -180,13 +180,6 @@ typedef enum{
 } da7281_i2c_t;
 
 /*
-*@brief Resonant Frequency
-*/
-typedef enum{
-    
-}
-
-/*
 *@breif DA7281 TOP Configuration 1
 */
 typedef enum{
@@ -220,5 +213,5 @@ typedef enum{
 */
 
 
-uint8_t da7281_init(da7281_handle *handle);
+uint8_t da7281_init(da7281_handle_t *handle);
 

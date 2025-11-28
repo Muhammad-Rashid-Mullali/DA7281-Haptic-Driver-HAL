@@ -5,5 +5,10 @@
 
 uint8_t da7281_init(da7281_handle *handle)
 {
+    if(handle == NULL)
+    {
+        return 1;
+    }
+
     
 }
