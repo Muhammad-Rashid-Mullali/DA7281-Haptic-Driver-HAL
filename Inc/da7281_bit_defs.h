@@ -166,7 +166,7 @@ typedef enum{
 /*
 *@brief Device Structure Handle
 */
-typedef struct da7281_handle{
+struct da7281_handle{
 
     void *i2c_rslt;
     uint8_t *iic_read;

@@ -209,8 +209,11 @@ typedef enum{
 } da7281_top_cfg2_t;
 
 /*
-*@breif 
+*@breif Power States
 */
+#define DA7281_IDLE_STATE                       UINT8_C(0x00)
+#define DA7281_STANDBY_STATE                    UINT8_C(0x01)
+#define DA7281_DRIVE_STATE                      UINT8_C(0x02)
 
 
 uint8_t da7281_init(da7281_handle_t *handle);
