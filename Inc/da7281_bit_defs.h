@@ -161,12 +161,12 @@ typedef enum{
     DA7281_HBRIDGE_ERC_HS_TRIM_01 =                 UINT8_C(0x01), /* High side Edge Rate Control 50mV/ns */
     DA7281_HBRIDGE_ERC_HS_TRIM_10 =                 UINT8_C(0x10), /* High side Edge Rate Control 75mV/ns */
     DA7281_HBRIDGE_ERC_HS_TRIM_11 =                 UINT8_C(0x11)  /* High side Edge Rate Control 100mV/ns (Default)*/
-}
+} da7281_hbridge_erc_hs_trim_t;
 
 /*
 *@brief Device Structure Handle
 */
-struct da7281_handle{
+typedef struct da7281_handle{
 
     void *i2c_rslt;
     uint8_t *iic_read;

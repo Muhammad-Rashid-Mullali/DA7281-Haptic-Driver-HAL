@@ -2,8 +2,21 @@
 #include <stdio.h>
 #include "da7281_bit_defs.h"
 
+/*Enable/Disable macros*/
 #define DA7281_BOOL_TRUE                        UINT8_C(0x01)
 #define DA7281_BOOL_FALSE                       UINT8_C(0x00)
+
+/*API Success code*/
+#define DA7281_OK                               INT8_C(0x00)
+
+#define DA7281_MAX_LEN                          UINT8_C(0x80)  //128 in decimal
+
+/* Macros for Read/Write*/
+#define DA7281_READ                             UINT8_C(0)
+#define DA7281_WRITE                            UINT8_C(1)
+
+/* Macros Interfaces */
+#define DA7281_I2C_INTF                         UINT8_C(0)
 
 /*DA7281 Register Address*/
 #define DA7281_REG_CHIP_REV                     UINT8_C(0x00)
@@ -89,7 +102,7 @@ typedef enum {
                                                                   or resonant frequency */
 
     E_OC_FAULT =                                UINT8_C(0x07)  /* Over-current / short-circuit fault on the OUTP or OUTN pin */
-} da7281_irq_events_t
+} da7281_irq_events_t;
 
 /*
 *@brief IRQ Event Warnings
