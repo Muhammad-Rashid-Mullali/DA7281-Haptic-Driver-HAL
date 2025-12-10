@@ -171,6 +171,7 @@ typedef struct da7281_handle{
 
     void *dev_handle;
     void *i2c_rslt;
+    void (*receive_callback)(uint8_t type);
     uint8_t (*iic_read)(uint8_t reg_addr, uint8_t reg_data, uint32_t len);
     uint8_t (*iic_write)(uint8_t reg_addr, uint8_t reg_data, uint32_t len);
     uint8_t delay;

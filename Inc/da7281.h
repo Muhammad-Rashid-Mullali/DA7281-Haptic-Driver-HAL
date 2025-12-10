@@ -255,3 +255,8 @@ int8_t da7281_init(da7281_handle_t *handle);
  */
 int8_t da7281_irq_handler(da7281_handle_t *handle);
 
+/*!
+*   @breif DA7281 Configure Actuator Setup
+*/
+int8_t da7281_configure_actuator(da7281_handle_t *handle);
+

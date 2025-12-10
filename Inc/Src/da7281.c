@@ -69,7 +69,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
 
     if (reg & (DA7281_BIT_ENABLE << STA_UVLO_VBAT_OK))
     {
-        /* code */
+        handle->receive_callback(STA_UVLO_VBAT_OK);
     }
 
     if (reg & (DA7281_BIT_ENABLE << STA_PAT_DONE))
@@ -82,11 +82,14 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
         /* code */
     }
 
+    
     if (reg & (DA7281_BIT_ENABLE << STA_PAT_FAULT))
     {
+        /* Detected a Fault*/
+
         da7281_irq_sequence_t seq;
 
-        if(handle->iic_read(DA7281_REG_IRQ_EVENT_SEQ_DIAG, &seq, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+        if(handle->iic_read(DA7281_REG_IRQ_EVENT_SEQ_DIAG, (uint8_t *)&seq, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
         {
             if(seq & (DA7281_BIT_ENABLE << E_PWM_FAULT))
             {
@@ -107,28 +110,74 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
 
     if (reg & (DA7281_BIT_ENABLE << STA_WARNING))
     {
+        /* Detected a Warning*/
+
         da7281_irq_warnings_t warning;
 
-        if(handle->iic_read(DA7281_REG_IRQ_EVENT_WARNING_DIAG, &warning, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+        if(handle->iic_read(DA7281_REG_IRQ_EVENT_WARNING_DIAG, (uint8_t *)&warning, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
         {
             if(warning & (DA7281_BIT_ENABLE << E_OVERTEMP_WARN))
             {
-                /* CODE */
+                /* Driver temperature has exceeded the warning limit of 105 °C!!!
+                Device continues operation but limit playback or reduce drive to protect the actuator.*/
+                handle->receive_callback(E_OVERTEMP_WARN);
+
+                /* Clear the flag */
+                uint8_t flag = NULL;
+                flag |= (DA7281_BIT_ENABLE << E_WARNING);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
             }
 
             if(warning & (DA7281_BIT_ENABLE << E_MEM_TYPE))
             {
-                /* CODE */
+                /* Indicates that the memory data type configured in register 
+                MEM_DATA_SIGNED does not match the ACCELERATION_EN */
+                da7281_top_cfg1_t accel_en;
+                if(handle->iic_read(DA7281_REG_TOP_CFG1, (uint8_t *)&accel_en, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+                {
+                    if(accel_en & (DA7281_BIT_ENABLE << ACCELERATION_EN) == DA7281_BOOL_TRUE)
+                    {
+                        /* ACCELERATION_EN = 1 So Write MEM_DATA_SIGNED = 0 */
+                        accel_en = (DA7281_BIT_DISABLE << MEM_DATA_SIGNED);
+                        handle->iic_write(DA7281_REG_TOP_CFG2, (uint8_t *)&accel_en, DA7281_REG_BYTE);
+                    }
+
+                    else
+                    {
+                        /* ACCELERATION_EN = 0 So Write MEM_DATA_SIGNED = 1 */
+                        accel_en = (DA7281_BIT_ENABLE << MEM_DATA_SIGNED);
+                        handle->iic_write(DA7281_REG_TOP_CFG2, (uint8_t *)&accel_en, DA7281_REG_BYTE);
+                    }
+                }
+
+                /* Clear the flag */
+                uint8_t flag = NULL;
+                flag |= (DA7281_BIT_ENABLE << E_WARNING);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
             }
 
             if(warning & (DA7281_BIT_ENABLE << E_LIM_DRIVE_ACC))
             {
-                /* CODE */
+                /* Indicates that acceleration is limited because the power supply
+                level is lower than required for the acceleration target */
+                handle->receive_callback(E_LIM_DRIVE_ACC);
+
+                /* Clear the Flag*/
+                uint8_t flag = NULL;
+                flag |= (DA7281_BIT_ENABLE << E_WARNING);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
             }
 
             if(warning & (DA7281_BIT_ENABLE << E_LIM_DRIVE))
             {
-                /* CODE */
+                /* Indicates that playback is limited because the power supply
+                level is lower than the sequence targe */
+                handle->receive_callback(E_LIM_DRIVE);
+
+                /* Clear the Flag*/
+                uint8_t flag = NULL;
+                flag |= (DA7281_BIT_ENABLE << E_WARNING);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
             }
         }
 
@@ -140,15 +189,25 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
 
     if (reg & (DA7281_BIT_ENABLE << STA_ACTUATOR))
     {
-        /* code */
+        /* Detected a fault in actuator impedance,BEMF amplitude, or resonant frequency */
+        handle->receive_callback(STA_ACTUATOR);
+
+        /* Clear the Flag */
+        uint8_t flag = NULL;
+        flag |= (DA7281_BIT_ENABLE << E_ACTUATOR_FAULT);
+        handle->iic_write(DA7281_REG_IRQ_EVENT1, &flag, DA7281_REG_BYTE);
     }
 
       if (reg & (DA7281_BIT_ENABLE << STA_OC))
     {
-        /* code */
-    }
+        /* Short circuit / over-current fault */
+        handle->receive_callback(STA_OC);
 
-  
+        /* Clear the flag */
+        uint8_t flag = NULL;
+        flag |= (DA7281_BIT_ENABLE << E_OC_FAULT);
+        handle->iic_write(DA7281_REG_IRQ_EVENT1, &flag, DA7281_REG_BYTE);
+    }
 }
 
 
