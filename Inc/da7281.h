@@ -253,5 +253,5 @@ int8_t da7281_init(da7281_handle_t *handle);
 /*!
  *  @brief DA7281 IRQ Handler
  */
-int8_t da7281_irq_handler(void);
+int8_t da7281_irq_handler(da7281_handle_t *handle);
 
