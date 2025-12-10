@@ -218,6 +218,17 @@ typedef enum{
 } da7281_top_cfg1_t;
 
 /*
+*@breif DA7281 TOP Control 1
+*/
+typedef enum{
+    OPERATION_MODE =                            UINT8_C(0x00), /* Haptic operation mode */
+
+    STANDBY_EN =                                UINT8_C(0x03), /* Sets the state DA7281 returns to after completion of playback */
+
+    SEQ_START =                                 UINT8_C(0x04) /* Start/stop control of Waveform Memory sequence playback */
+} da7281_top_ctl1;
+
+/*
 *@breif DA7281 TOP Configuration 2
 */
 typedef enum{
@@ -234,5 +245,13 @@ typedef enum{
 #define DA7281_DRIVE_STATE                      UINT8_C(0x02)
 
 
-uint8_t da7281_init(da7281_handle_t *handle);
+/*!
+ *  @brief DA7281 Initialization
+ */
+int8_t da7281_init(da7281_handle_t *handle);
+
+/*!
+ *  @brief DA7281 IRQ Handler
+ */
+int8_t da7281_irq_handler(void);
 
