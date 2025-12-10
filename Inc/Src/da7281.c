@@ -210,5 +210,36 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
     }
 }
 
+/*
+*Actuator Setup Functions
+*/
+int8_t da7281_select_actuator_type(da7281_handle_t *handle, bool type)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_TOP_CFG1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << ACTUATOR_TYPE);
+        reg |= (type << ACTUATOR_TYPE);
+
+        handle->iic_write(DA7281_REG_TOP_CFG1, &reg, DA7281_REG_BYTE);
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*/
+
 
 

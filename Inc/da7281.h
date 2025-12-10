@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "da7281_bit_defs.h"
 
 /*Enable/Disable macros*/
@@ -257,6 +258,8 @@ int8_t da7281_irq_handler(da7281_handle_t *handle);
 
 /*!
 *   @breif DA7281 Configure Actuator Setup
+* @handle : Device handle struct
+* @type : LRA - 0 ; ERM - 1
 */
-int8_t da7281_configure_actuator(da7281_handle_t *handle);
+int8_t da7281_select_actuator_type(da7281_handle_t *handle, bool type);
 
