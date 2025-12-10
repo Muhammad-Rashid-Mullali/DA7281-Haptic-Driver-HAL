@@ -17,6 +17,11 @@
 
 /* Macros Interfaces */
 #define DA7281_I2C_INTF                         UINT8_C(0)
+#define DA7281_REG_BYTE                         UINT8_C(1)
+#define DA7281_I2C_RET_SUCCESS                  UINT8_C(0)
+#define DA7281_I2C_RET_ERROR                    UINT8_C(1)
+#define DA7281_RET_ERROR                        INT8_C(-1)
+#define DA7281_RET_NULL_ERROR                   INT8_C(-2)
 
 /*DA7281 Register Address*/
 #define DA7281_REG_CHIP_REV                     UINT8_C(0x00)

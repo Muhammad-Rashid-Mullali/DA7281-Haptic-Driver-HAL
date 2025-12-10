@@ -5,6 +5,7 @@
 /*
 *Default value defines
 */
+#define DA7281_DEFAULT_CHIP_REV                 UINT8_C(0xCA)
 #define DA7281_DEFAULT_LRA_AVR_H                UINT8_C(0x21)
 #define DA7281_DEFAULT_LRA_PER_L                UINT8_C(0x4F)
 #define DA7281_DEFAULT_ACTUATOR_NOMMAX          UINT8_C(0x5A)
@@ -168,8 +169,9 @@ typedef enum{
 */
 typedef struct da7281_handle{
 
+    void *dev_handle;
     void *i2c_rslt;
-    uint8_t *iic_read;
-    uint8_t *iic_write;
+    uint8_t (*iic_read)(uint8_t reg_addr, uint8_t reg_data, uint32_t len);
+    uint8_t (*iic_write)(uint8_t reg_addr, uint8_t reg_data, uint32_t len);
     uint8_t delay;
 } da7281_handle_t;
