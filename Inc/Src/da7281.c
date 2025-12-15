@@ -64,22 +64,32 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
 
     if(reg & (DA7281_BIT_ENABLE << STA_SEQ_CONTINUE))
     {
-        /* code */
+        /* Continuous sequence status */
+        handle->receive_callback(STA_SEQ_CONTINUE);
     }
 
     if (reg & (DA7281_BIT_ENABLE << STA_UVLO_VBAT_OK))
     {
+        /* UVLO output status */
         handle->receive_callback(STA_UVLO_VBAT_OK);
     }
 
     if (reg & (DA7281_BIT_ENABLE << STA_PAT_DONE))
     {
-        /* code */
+        /* Memory based sequence status  */
+        handle->receive_callback(STA_PAT_DONE);
     }
 
     if (reg & (DA7281_BIT_ENABLE << STA_OVERTEMP_CRIT))
     {
-        /* code */
+        /* Critical chip temperature event, chip temperature has
+           exceeded the critical limit of 125 °C */
+           handle->receive_callback(STA_OVERTEMP_CRIT);
+
+           /* Clear the Flag */
+           uint8_t flag = NULL;
+           flag |= (DA7281_BIT_ENABLE << E_OVERTEMP_CRIT);
+           handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
     }
 
     
@@ -93,17 +103,37 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
         {
             if(seq & (DA7281_BIT_ENABLE << E_PWM_FAULT))
             {
-                /* CODE */
+                /* Indicates that the PWM input signal has timed out */
+                handle->receive_callback(E_PWM_FAULT);
+
+                /* Clear the Flag */
+                uint8_t flag = NULL;
+                flag |= (DA7281_BIT_ENABLE << E_SEQ_FAULT);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
             }
 
             if(seq & (DA7281_BIT_ENABLE << E_MEM_FAULT))
             {
-                /* CODE */
+                /* Indicates that the Waveform Memory is corrupted
+                   (empty,invalid snippet ID, invalid frame structure) */
+                handle->receive_callback(E_MEM_FAULT);
+
+                /* Clear the Flag */
+                uint8_t flag = NULL;
+                flag |= (DA7281_BIT_ENABLE << E_SEQ_FAULT);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
             }
 
             if(seq & (DA7281_BIT_ENABLE << E_SEQ_ID_FAULT))
             {
-                /* CODE */
+                /*  indicating that requested sequence ID configured
+                    in PS_SEQ_ID is not valid */
+                handle->receive_callback(E_SEQ_ID_FAULT);
+
+                /* Clear the Flag */
+                uint8_t flag = NULL;
+                flag |= (DA7281_BIT_ENABLE << E_SEQ_ID_FAULT);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
             }
         }
     }
@@ -239,7 +269,52 @@ int8_t da7281_select_actuator_type(da7281_handle_t *handle, bool type)
 }
 
 /*
+*Set Actuator Nominal maximum voltage
 */
+int8_t da7281_set_actuator_nomax(da7281_handle_t *handle, uint8_t value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_ACTUATOR_NOMAX_BIT_POS);
+        reg |= (value << DA7281_ACTUATOR_NOMAX_BIT_POS);
+
+        handle->iic_write(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE);
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+}
+
+/*
+*Get Actuator nominal maximum voltage
+*/
+int8_t da7281_get_actuator_nomax(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        *value = reg;
+    }
+
+    return DA7281_OK;
+}
+
+
 
 
 
