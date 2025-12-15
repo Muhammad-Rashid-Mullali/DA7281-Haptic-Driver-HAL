@@ -238,6 +238,8 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
         flag |= (DA7281_BIT_ENABLE << E_OC_FAULT);
         handle->iic_write(DA7281_REG_IRQ_EVENT1, &flag, DA7281_REG_BYTE);
     }
+
+    return DA7281_OK;
 }
 
 /*
@@ -282,8 +284,8 @@ int8_t da7281_set_actuator_nomax(da7281_handle_t *handle, uint8_t value)
 
     if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
     {
-        reg &= ~(DA7281_BIT_ENABLE << DA7281_ACTUATOR_NOMAX_BIT_POS);
-        reg |= (value << DA7281_ACTUATOR_NOMAX_BIT_POS);
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
+        reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
 
         handle->iic_write(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE);
     }
@@ -292,6 +294,8 @@ int8_t da7281_set_actuator_nomax(da7281_handle_t *handle, uint8_t value)
     {
         return DA7281_RET_ERROR;
     }
+
+    return DA7281_OK;
 }
 
 /*
@@ -307,6 +311,54 @@ int8_t da7281_get_actuator_nomax(da7281_handle_t *handle, uint8_t *value)
     }
 
     if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        *value = reg;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Set Actuator absolute maximum voltage
+*/
+int8_t da7281_set_actuator_absmax(da7281_handle_t *handle, uint8_t value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if (handle->iic_read(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
+        reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
+
+        handle->iic_write(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE);
+    }
+
+    else 
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get Actuator absolute maximum voltage
+*/
+int8_t da7281_get_actuator_absmax(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }

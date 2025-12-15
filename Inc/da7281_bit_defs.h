@@ -26,7 +26,7 @@
 
 #define DA7281_DEFAULT_DELAY_SHIFT_L            UINT8_C(0x05)
 
-#define DA7281_ACTUATOR_NOMAX_BIT_POS           UINT8_C(0x00)
+#define DA7281_REG_ACTUATOR_X_BIT_POS           UINT8_C(0x00)
 
 /*
 *@breif Actuator Type Mode
