@@ -332,3 +332,20 @@ int8_t da7281_get_v2i_factor_l(da7281_handle_t *handle, uint8_t *value);
 * @value : Value to be return
 */
 int8_t da7281_set_v2i_factor(da7281_handle_t *handle, uint8_t *value);
+
+/*
+* @breif Get Impedance Z from V2I_FACTOR
+* @handle : Device handle struct
+* @value : Value to be return
+*/
+int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value);
+
+/*
+* @breif Set LRA_PER_H
+* @handle : Device handle struct
+* @value : Value to be return
+*/
+int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value)
+
+
+

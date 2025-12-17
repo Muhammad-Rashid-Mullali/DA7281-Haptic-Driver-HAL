@@ -555,6 +555,43 @@ int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *value)
     return DA7281_OK;
 }
 
+/*
+*Get Impedance Z from V2I_FACTOR
+*/
+int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    uint16_t *v2i_factor;
+    if(da7281_get_v2i_factor(handle, v2i_factor) == DA7281_OK)
+    {
+        uint8_t *imax;
+        if(da7281_get_actuator_imax(handle, imax) == DA7281_OK)
+        {
+            *value = ((*v2i_factor * 1.6104) / (*imax + 4));   /*V2𝐼_𝐹𝐴𝐶𝑇𝑂𝑅[15:0] = 𝑍× (𝐼𝑀𝐴𝑋[4:0]+4) / 1.6104*/
+        }
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Set LRA_PER_H - LRA resonant frequency
+*/
+int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value)
+{
+    
+}
 
 
 
