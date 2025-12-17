@@ -331,4 +331,4 @@ int8_t da7281_get_v2i_factor_l(da7281_handle_t *handle, uint8_t *value);
 * @handle : Device handle struct
 * @value : Value to be return
 */
-int8_t da7281_set_v2i_factor_h(da7281_handle_t *handle, uint8_t *value);
+int8_t da7281_set_v2i_factor(da7281_handle_t *handle, uint8_t *value);
