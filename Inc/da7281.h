@@ -273,7 +273,7 @@ int8_t da7281_set_actuator_nommax(da7281_handle_t* handle, uint8_t value);
 /*
 * @breif Get Actuator nominal maximum voltage
 * @handle : Device handle struct
-* @value : The allowable range from 0 V to 6 V in 23.4 mV steps
+* @value : Default value is @DA7281_DEFAULT_ACTUATOR_NOMMAX of 23.4 mV steps
 */
 int8_t da7281_get_actuator_nommax(da7281_handle_t* handle, uint8_t *value);
 
@@ -283,3 +283,52 @@ int8_t da7281_get_actuator_nommax(da7281_handle_t* handle, uint8_t *value);
 * @value : The allowable range from 0 V to 6 V in 23.4 mV steps
 */
 int8_t da7281_set_actuator_absmax(da7281_handle_t* handle, uint8_t value);
+
+/*
+* @breif Get Actuator absolute maximum voltage
+* @handle : Device handle struct
+* @value : Default value is @DA7281_DEFAULT_ACTUATOR_ABSMAX in 23.4 mV steps
+*/
+int8_t da7281_get_actuator_absmax(da7281_handle_t *handle, uint8_t *value);
+
+/*
+* @breif Set Actuator maximum rated current
+* @handle : Device handle struct
+* @value : Default value is @DA7281_DEFAULT_ACTUATOR_ABSMAX in 23.4 mV steps
+*/
+int8_t da7281_set_actuator_imax(da7281_handle_t *handle, uint8_t value);
+
+/*
+* @breif Set V2I_FACTOR_H
+* @handle : Device handle struct
+* @value : Default value is @DA7281_DEFAULT_V2I_FACTOR_H
+*/
+int8_t da7281_set_v2i_factor_h(da7281_handle_t *handle, uint8_t value);
+
+/*
+* @breif Get V2I_FACTOR_H
+* @handle : Device handle struct
+* @value : Default value is @DA7281_DEFAULT_V2I_FACTOR_H
+*/
+int8_t da7281_get_v2i_factor_h(da7281_handle_t *handle, uint8_t *value);
+
+/*
+* @breif Set V2I_FACTOR_L
+* @handle : Device handle struct
+* @value : Default value is @DA7281_DEFAULT_V2I_FACTOR_L
+*/
+int8_t da7281_set_v2i_factor_l(da7281_handle_t *handle, uint8_t value);
+
+/*
+* @breif Get V2I_FACTOR_L
+* @handle : Device handle struct
+* @value : Default value is @DA7281_DEFAULT_V2I_FACTOR_L
+*/
+int8_t da7281_get_v2i_factor_l(da7281_handle_t *handle, uint8_t *value);
+
+/*
+* @breif Get Concatenated V2I_FACTOR
+* @handle : Device handle struct
+* @value : Value to be return
+*/
+int8_t da7281_set_v2i_factor_h(da7281_handle_t *handle, uint8_t *value);

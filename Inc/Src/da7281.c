@@ -366,6 +366,197 @@ int8_t da7281_get_actuator_absmax(da7281_handle_t *handle, uint8_t *value)
     return DA7281_OK;
 }
 
+/*
+*Set Actuator maximum rated current
+*/
+int8_t da7281_set_actuator_imax(da7281_handle_t *handle, uint8_t value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if (handle->iic_read(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
+        reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
+
+        handle->iic_write(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE);
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get Actuator maximum rated current
+*/
+int8_t da7281_get_actuator_imax(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        *value = reg;
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Set V2I_FACTOR_H
+*/
+int8_t da7281_set_v2i_factor_h(da7281_handle_t *handle, uint8_t value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if (handle->iic_read(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
+        reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
+
+        handle->iic_write(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE);
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get V2I_FACTOR_H
+*/
+int8_t da7281_get_v2i_factor_h(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        *value = reg;
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Set V2I_FACTOR_L
+*/
+int8_t da7281_set_v2i_factor_l(da7281_handle_t *handle, uint8_t value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if (handle->iic_read(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
+        reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
+
+        handle->iic_write(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE);
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get V2I_FACTOR_L
+*/
+int8_t da7281_get_v2i_factor_l(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        *value = reg;
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get Concatenation of V2I_FACTOR
+*/
+int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *value)
+{
+    uint16_t reg;
+
+    if(handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    uint8_t *v2i_factor_h;
+    if(da7281_get_v2i_factor_h(handle, v2i_factor_h) == DA7281_OK)
+    {
+        uint8_t *v2i_factor_l;
+        if(da7281_get_v2i_factor_l(handle, v2i_factor_l) == DA7281_OK)
+        {
+            *value = (*v2i_factor_h * 256) + *v2i_factor_l;
+        }
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+
+
 
 
 
