@@ -273,7 +273,7 @@ int8_t da7281_select_actuator_type(da7281_handle_t *handle, bool type)
 /*
 *Set Actuator Nominal maximum voltage
 */
-int8_t da7281_set_actuator_nomax(da7281_handle_t *handle, uint8_t value)
+int8_t da7281_set_actuator_nommax(da7281_handle_t *handle, uint8_t value)
 {
     uint8_t reg;
 
@@ -301,7 +301,7 @@ int8_t da7281_set_actuator_nomax(da7281_handle_t *handle, uint8_t value)
 /*
 *Get Actuator nominal maximum voltage
 */
-int8_t da7281_get_actuator_nomax(da7281_handle_t *handle, uint8_t *value)
+int8_t da7281_get_actuator_nommax(da7281_handle_t *handle, uint8_t *value)
 {
     uint8_t reg;
 

@@ -257,9 +257,29 @@ int8_t da7281_init(da7281_handle_t *handle);
 int8_t da7281_irq_handler(da7281_handle_t *handle);
 
 /*!
-*   @breif DA7281 Configure Actuator Setup
+* @breif DA7281 Configure Actuator Setup
 * @handle : Device handle struct
 * @type : LRA - 0 ; ERM - 1
 */
 int8_t da7281_select_actuator_type(da7281_handle_t *handle, bool type);
 
+/*
+* @breif Set Actuator Nominal maximum voltage
+* @handle : Device handle struct
+* @value : The allowable range from 0 V to 6 V in 23.4 mV steps
+*/
+int8_t da7281_set_actuator_nommax(da7281_handle_t* handle, uint8_t value);
+
+/*
+* @breif Get Actuator nominal maximum voltage
+* @handle : Device handle struct
+* @value : The allowable range from 0 V to 6 V in 23.4 mV steps
+*/
+int8_t da7281_get_actuator_nommax(da7281_handle_t* handle, uint8_t *value);
+
+/*
+* @breif Set Actuator absolute maximum voltage
+* @handle : Device handle struct
+* @value : The allowable range from 0 V to 6 V in 23.4 mV steps
+*/
+int8_t da7281_set_actuator_absmax(da7281_handle_t* handle, uint8_t value);
