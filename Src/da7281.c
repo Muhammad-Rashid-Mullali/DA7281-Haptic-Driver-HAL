@@ -545,6 +545,11 @@ int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *value)
         {
             *value = (*v2i_factor_h * 256) + *v2i_factor_l;
         }
+
+        if(*value != (*v2i_factor_l / *v2i_factor_h) + 256)
+        {
+            return DA7281_RET_VALUE_ERROR;
+        }
     }
 
     else
@@ -556,7 +561,7 @@ int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *value)
 }
 
 /*
-*Get Impedance Z from V2I_FACTOR
+*Get Impedance Z from V2I_FACTOR[15:0]
 */
 int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value)
 {
@@ -590,8 +595,167 @@ int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value)
 */
 int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value)
 {
+    uint8_t reg;
+
+    if (handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
+        reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
+
+        handle->iic_write(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE);
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get LRA_PER_H - LRA resonant frequency
+*/
+int8_t da7281_get_lra_per_h(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if (handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        *value = reg;
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Set LRA_PER_L - LRA resonant frequency
+*/
+int8_t da7281_set_lra_per_l(da7281_handle_t *handle, uint8_t value)
+{
+    uint8_t reg;
+
+    if (handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
+        reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS) & DA7281_7BIT_MASKING;
+
+        handle->iic_write(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE);
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get LRA_PER_L - LRA resonant frequency
+*/
+int8_t da7281_get_lra_per_l(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if (handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    {
+        *value = reg;
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get Concacenated LRA_PER[14:0]
+*/
+int8_t da7281_get_lra_per(da7281_handle_t *handle, uint8_t *value)
+{
+    uint16_t reg;
+
+    if (handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+    
+    uint8_t *lra_per_h;
+    if(da7281_get_lra_per_h(handle, *lra_per_h) == DA7281_OK)
+    {
+        uint8_t *lra_per_l;
+        if(da7281_get_lra_per_l(handle, *lra_per_l) == DA7281_OK)
+        {
+            *value = ((*lra_per_h * 128) + *lra_per_l);
+        }
+
+        if (*value != ((*lra_per_l / *lra_per_h)) + 128)
+        {
+            return DA7281_RET_VALUE_ERROR;
+        }
+    }
+
+    else
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Get LRA Frequency from LRA_PER[14:0]
+*/
+int8_t da7281_get_lra_freq(da7281_handle_t *handle, uint8_t *value)
+{
+    uint8_t reg;
+
+    if (handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    uint8_t lra_per;
+    if(da7281_get_lra_per(handle, &lra_per) == DA7281_OK)
+    {
+        *value = ((lra_per) * 1333.32 * 10^-9);
+    }
     
 }
+
+
+
+
+
+
 
 
 

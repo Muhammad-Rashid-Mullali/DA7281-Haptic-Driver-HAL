@@ -7,8 +7,11 @@
 #define DA7281_BOOL_TRUE                        UINT8_C(0x01)
 #define DA7281_BOOL_FALSE                       UINT8_C(0x00)
 
-/*API Success code*/
-#define DA7281_OK                               INT8_C(0x00)
+/*API Return code*/
+#define DA7281_OK                               INT8_C(0)
+#define DA7281_RET_ERROR                        INT8_C(-1)
+#define DA7281_RET_NULL_ERROR                   INT8_C(-2)
+#define DA7281_RET_VALUE_ERROR                  INT8_C(-3)
 
 #define DA7281_MAX_LEN                          UINT8_C(0x80)  //128 in decimal
 
@@ -21,8 +24,6 @@
 #define DA7281_REG_BYTE                         UINT8_C(1)
 #define DA7281_I2C_RET_SUCCESS                  UINT8_C(0)
 #define DA7281_I2C_RET_ERROR                    UINT8_C(1)
-#define DA7281_RET_ERROR                        INT8_C(-1)
-#define DA7281_RET_NULL_ERROR                   INT8_C(-2)
 
 /*DA7281 Register Address*/
 #define DA7281_REG_CHIP_REV                     UINT8_C(0x00)
@@ -345,7 +346,7 @@ int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value);
 * @handle : Device handle struct
 * @value : Value to be return
 */
-int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value)
+int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value);
 
 
 
