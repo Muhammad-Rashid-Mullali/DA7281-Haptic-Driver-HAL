@@ -746,7 +746,7 @@ int8_t da7281_get_lra_freq(da7281_handle_t *handle, uint8_t *value)
     uint8_t lra_per;
     if(da7281_get_lra_per(handle, &lra_per) == DA7281_OK)
     {
-        *value = ((lra_per) * 1333.32 * 10^-9);
+        *value = ((&lra_per) * 1333.32 * 10^-9);
     }
     
 }

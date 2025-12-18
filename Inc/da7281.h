@@ -344,9 +344,16 @@ int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value);
 /*
 * @breif Set LRA_PER_H
 * @handle : Device handle struct
-* @value : Value to be return
+* @value : Value to be written
 */
 int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value);
+
+/*
+* @breif Get LRA_PER_H
+* @handle : Device handle struct
+* @value : Value to be return
+*/
+int8_t da7281_get_lra_per_h(da7281_handle_t *handle, uint8_t *value);
 
 
 
