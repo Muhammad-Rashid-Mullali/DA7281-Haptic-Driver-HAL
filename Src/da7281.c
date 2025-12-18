@@ -708,10 +708,9 @@ int8_t da7281_get_lra_per(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
     
-    uint8_t *lra_per_h;
+    uint8_t *lra_per_h, *lra_per_l;
     if(da7281_get_lra_per_h(handle, *lra_per_h) == DA7281_OK)
     {
-        uint8_t *lra_per_l;
         if(da7281_get_lra_per_l(handle, *lra_per_l) == DA7281_OK)
         {
             *value = ((*lra_per_h * 128) + *lra_per_l);
@@ -746,9 +745,8 @@ int8_t da7281_get_lra_freq(da7281_handle_t *handle, uint8_t *value)
     uint8_t lra_per;
     if(da7281_get_lra_per(handle, &lra_per) == DA7281_OK)
     {
-        *value = ((&lra_per) * 1333.32 * 10^-9);
+        *value = (((lra_per)) * 1333.32e-9);
     }
-    
 }
 
 
