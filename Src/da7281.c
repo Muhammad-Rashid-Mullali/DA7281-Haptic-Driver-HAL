@@ -528,34 +528,26 @@ int8_t da7281_get_v2i_factor_l(da7281_handle_t *handle, uint8_t *value)
 /*
 *Get Concatenation of V2I_FACTOR
 */
-int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *value)
+int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *v2i_factor)
 {
-    uint16_t reg;
+    uint8_t v2i_factor_h, v2i_factor_l;
 
-    if(handle == NULL)
+    if(handle == NULL || v2i_factor == NULL)
     {
         return DA7281_RET_ERROR;
     }
 
-    uint8_t *v2i_factor_h;
-    if(da7281_get_v2i_factor_h(handle, v2i_factor_h) == DA7281_OK)
-    {
-        uint8_t *v2i_factor_l;
-        if(da7281_get_v2i_factor_l(handle, v2i_factor_l) == DA7281_OK)
-        {
-            *value = (*v2i_factor_h * 256) + *v2i_factor_l;
-        }
-
-        if(*value != (*v2i_factor_l / *v2i_factor_h) + 256)
-        {
-            return DA7281_RET_VALUE_ERROR;
-        }
-    }
-
-    else
+    if(da7281_get_v2i_factor_h(handle, &v2i_factor_h) != DA7281_OK)
     {
         return DA7281_RET_ERROR;
     }
+    
+    if(da7281_get_v2i_factor_l(handle, &v2i_factor_l) != DA7281_OK)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    *v2i_factor = ((uint16_t)v2i_factor_h << 8) | v2i_factor_l;
 
     return DA7281_OK;
 }
@@ -563,29 +555,27 @@ int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *value)
 /*
 *Get Impedance Z from V2I_FACTOR[15:0]
 */
-int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value)
+int8_t da7281_get_impedance(da7281_handle_t *handle, float *value)
 {
-    uint8_t reg;
+    uint16_t v2i_factor;
+    uint8_t imax;
 
-    if(handle == NULL)
+    if(handle == NULL || value == NULL)
     {
         return DA7281_RET_ERROR;
     }
 
-    uint16_t *v2i_factor;
-    if(da7281_get_v2i_factor(handle, v2i_factor) == DA7281_OK)
+    if(da7281_get_v2i_factor(handle, v2i_factor) != DA7281_OK)
     {
-        uint8_t *imax;
-        if(da7281_get_actuator_imax(handle, imax) == DA7281_OK)
-        {
-            *value = ((*v2i_factor * 1.6104) / (*imax + 4));   /*V2𝐼_𝐹𝐴𝐶𝑇𝑂𝑅[15:0] = 𝑍× (𝐼𝑀𝐴𝑋[4:0]+4) / 1.6104*/
-        }
-    }
-
-    else
+        return DA7281_RET_ERROR;
+    }   
+    
+    if(da7281_get_actuator_imax(handle, &imax) != DA7281_OK)
     {
         return DA7281_RET_ERROR;
     }
+
+    *value = ((v2i_factor * 1.6104) / (imax + 4));   /*V2𝐼_𝐹𝐴𝐶𝑇𝑂𝑅[15:0] = 𝑍× (𝐼𝑀𝐴𝑋[4:0]+4) / 1.6104*/
 
     return DA7281_OK;
 }
@@ -699,33 +689,26 @@ int8_t da7281_get_lra_per_l(da7281_handle_t *handle, uint8_t *value)
 /*
 *Get Concacenated LRA_PER[14:0]
 */
-int8_t da7281_get_lra_per(da7281_handle_t *handle, uint8_t *value)
+int8_t da7281_get_lra_per(da7281_handle_t *handle, uint16_t *lra_per)
 {
-    uint16_t reg;
+    uint8_t lra_per_h, lra_per_l;
 
-    if (handle == NULL)
+    if (handle == NULL || lra_per == NULL)
     {
         return DA7281_RET_ERROR;
     }
     
-    uint8_t *lra_per_h, *lra_per_l;
-    if(da7281_get_lra_per_h(handle, *lra_per_h) == DA7281_OK)
-    {
-        if(da7281_get_lra_per_l(handle, *lra_per_l) == DA7281_OK)
-        {
-            *value = ((*lra_per_h * 128) + *lra_per_l);
-        }
-
-        if (*value != ((*lra_per_l / *lra_per_h)) + 128)
-        {
-            return DA7281_RET_VALUE_ERROR;
-        }
-    }
-
-    else
+    if(da7281_get_lra_per_h(handle, &lra_per_h) != DA7281_OK)
     {
         return DA7281_RET_ERROR;
     }
+    
+    if(da7281_get_lra_per_l(handle, &lra_per_l) != DA7281_OK)
+    {
+        return DA7281_RET_ERROR;
+    }
+    
+    *lra_per = ((uint16_t) lra_per_h << DA7281_LRA_PER_L_BITS) | (lra_per_l & DA7281_7BIT_MASKING);
 
     return DA7281_OK;
 }
@@ -733,21 +716,42 @@ int8_t da7281_get_lra_per(da7281_handle_t *handle, uint8_t *value)
 /*
 *Get LRA Frequency from LRA_PER[14:0]
 */
-int8_t da7281_get_lra_freq(da7281_handle_t *handle, uint8_t *value)
+int8_t da7281_get_lra_freq(da7281_handle_t *handle, float *lra_freq)
 {
-    uint8_t reg;
+    uint8_t lra_per;
 
-    if (handle == NULL)
+    if (handle == NULL || lra_freq == NULL)
     {
         return DA7281_RET_ERROR;
     }
 
-    uint8_t lra_per;
-    if(da7281_get_lra_per(handle, &lra_per) == DA7281_OK)
+    if(da7281_get_lra_per(handle, &lra_per) != DA7281_OK)
     {
-        *value = (((lra_per)) * 1333.32e-9);
+       return DA7281_RET_ERROR;
     }
+
+    *lra_freq = 1.0f / (lra_per * 1.33332e-6);
+
+    return DA7281_OK;
 }
+
+/*
+*Set Override value for DRO Mode
+*/
+int8_t da7281_set_override_val(da7281_handle_t *handle, uint8_t *override_val)
+{
+    if(handle == NULL || override_val == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+}
+
+/*
+*MODE CONFIGURATION
+*/
+
+int8_t da7281_dro_operation_mode(da7281_handle_t *handle, uint8_t )
 
 
 

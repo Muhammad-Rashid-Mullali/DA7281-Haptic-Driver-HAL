@@ -330,16 +330,16 @@ int8_t da7281_get_v2i_factor_l(da7281_handle_t *handle, uint8_t *value);
 /*
 * @breif Get Concatenated V2I_FACTOR
 * @handle : Device handle struct
-* @value : Value to be return
+* @v2i_factor : Value to be return
 */
-int8_t da7281_set_v2i_factor(da7281_handle_t *handle, uint8_t *value);
+int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *v2i_factor);
 
 /*
 * @breif Get Impedance Z from V2I_FACTOR
 * @handle : Device handle struct
 * @value : Value to be return
 */
-int8_t da7281_get_impedance(da7281_handle_t *handle, uint8_t *value);
+int8_t da7281_get_impedance(da7281_handle_t *handle, float *value);
 
 /*
 * @breif Set LRA_PER_H
@@ -354,6 +354,34 @@ int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value);
 * @value : Value to be return
 */
 int8_t da7281_get_lra_per_h(da7281_handle_t *handle, uint8_t *value);
+
+/*
+* @breif Set LRA_PER_H
+* @handle : Device handle struct
+* @value : Value to be written
+*/
+int8_t da7281_set_lra_per_l(da7281_handle_t *handle, uint8_t value);
+
+/*
+* @breif Get LRA_PER_H
+* @handle : Device handle struct
+* @value : Value to be return
+*/
+int8_t da7281_get_lra_per_l(da7281_handle_t *handle, uint8_t *value);
+
+/*
+* @breif Get Concatenated LRA_PER
+* @handle : Device handle struct
+* @lra_per : Value to be return
+*/
+int8_t da7281_get_lra_per(da7281_handle_t *handle, uint16_t *lra_per);
+
+/*
+* @breif Get LRA Frequency from LRA_PER[14:0]
+* @handle : Device handle struct
+* @lra_freq : Value to be return
+*/
+int8_t da7281_get_lra_freq(da7281_handle_t *handle, float *lra_freq);
 
 
 
