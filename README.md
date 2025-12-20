@@ -5,11 +5,14 @@ DA7281 actively monitors the back electromotive force (BEMF) while continuously 
 
 # Overview
 This repository contains a low-level firmware driver (HAL) for the Renesas DA7281 haptic driver IC, designed for precise control of LRA/ERM actuators in embedded systems.
+
 The driver is intended to be hardware-agnostic and suitable for board bring-up, integration, and production firmware.
 
 # Interfaces & Dependencies
 Communication: Inter Integrated Communication (I2C)
+
 MCU: MCU-agnostic
+
 Language: C (MISRA-aware style)
 
 The driver does not depend on any vendor HAL and can be integrated into bare-metal or RTOS-based systems.
