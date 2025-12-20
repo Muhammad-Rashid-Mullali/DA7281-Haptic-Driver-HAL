@@ -19,7 +19,7 @@
 #define DA7281_READ                             UINT8_C(0)
 #define DA7281_WRITE                            UINT8_C(1)
 
-/* Macros Interfaces */
+/* Macros I2C Interface */
 #define DA7281_I2C_INTF                         UINT8_C(0)
 #define DA7281_REG_BYTE                         UINT8_C(1)
 #define DA7281_I2C_RET_SUCCESS                  UINT8_C(0)

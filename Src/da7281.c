@@ -17,15 +17,14 @@ int8_t da7281_init(da7281_handle_t *handle)
     /****************Need to check the completion of boot after 1.5ms using Suitable Timing**************/
 
     /*Read Chip Rev Register*/
-    handle->i2c_rslt = handle->iic_read(DA7281_REG_CHIP_REV, &chip_rev, DA7281_REG_BYTE);
-    if(handle->i2c_rslt == DA7281_I2C_RET_SUCCESS)
+    if(handle->iic_read(DA7281_REG_CHIP_REV, &chip_rev, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
     {
-        if(chip_rev != DA7281_DEFAULT_CHIP_REV)
+       if(chip_rev != DA7281_DEFAULT_CHIP_REV)
         {
             return DA7281_RET_ERROR;
         }
     }
-    
+
     /* Read TOP CTL1 Register*/
     if(handle->iic_read(DA7281_REG_TOP_CTL1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_SUCCESS)
     {
@@ -547,7 +546,7 @@ int8_t da7281_get_v2i_factor(da7281_handle_t *handle, uint16_t *v2i_factor)
         return DA7281_RET_ERROR;
     }
 
-    *v2i_factor = ((uint16_t)v2i_factor_h << 8) | v2i_factor_l;
+    *v2i_factor = ((uint16_t)v2i_factor_h << DA7281_V2I_FACTOR_H_BITS) | v2i_factor_l;
 
     return DA7281_OK;
 }
@@ -751,7 +750,10 @@ int8_t da7281_set_override_val(da7281_handle_t *handle, uint8_t *override_val)
 *MODE CONFIGURATION
 */
 
-int8_t da7281_dro_operation_mode(da7281_handle_t *handle, uint8_t )
+int8_t da7281_dro_operation_mode(da7281_handle_t *handle, uint8_t *value)
+{
+
+}
 
 
 

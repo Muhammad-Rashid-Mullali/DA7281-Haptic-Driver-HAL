@@ -2,9 +2,7 @@
 *This files contains the definitions of enumerations for each bits
 */
 
-/*
-*Default value defines
-*/
+/*******************************DEFAULT VALUE DEFINES***************************/
 #define DA7281_DEFAULT_CHIP_REV                 UINT8_C(0xCA)
 #define DA7281_DEFAULT_LRA_AVR_H                UINT8_C(0x21)
 #define DA7281_DEFAULT_LRA_PER_L                UINT8_C(0x4F)
@@ -26,9 +24,11 @@
 
 #define DA7281_DEFAULT_DELAY_SHIFT_L            UINT8_C(0x05)
 
+/*******************DA7281 BIT MASKING AND POSITIONS*******************************/
 #define DA7281_REG_ACTUATOR_X_BIT_POS           UINT8_C(0x00)
 
 #define DA7281_LRA_PER_L_BITS                   UINT8_C(7)
+#define DA7281_V2I_FACTOR_H_BITS                UINT8_C(8)
 #define DA7281_7BIT_MASKING                     UINT8_C(0x7F)
 
 /*
@@ -175,9 +175,8 @@ typedef enum{
 typedef struct da7281_handle{
 
     void *dev_handle;
-    void *i2c_rslt;
     void (*receive_callback)(uint8_t type);
-    uint8_t (*iic_read)(uint8_t reg_addr, uint8_t reg_data, uint32_t len);
-    uint8_t (*iic_write)(uint8_t reg_addr, uint8_t reg_data, uint32_t len);
+    int8_t (*iic_read)(uint8_t reg_addr, uint8_t *reg_data, uint32_t len);
+    int8_t (*iic_write)(uint8_t reg_addr, uint8_t *reg_data, uint32_t len);
     uint8_t delay;
 } da7281_handle_t;
