@@ -21,7 +21,7 @@
 
 /* Macros I2C Interface */
 #define DA7281_I2C_INTF                         UINT8_C(0)
-#define DA7281_REG_BYTE                         UINT8_C(1)
+#define DA7281_REG_BYTE_LEN                         UINT8_C(1)
 #define DA7281_I2C_RET_SUCCESS                  UINT8_C(0)
 #define DA7281_I2C_RET_ERROR                    UINT8_C(-1)
 
@@ -382,6 +382,20 @@ int8_t da7281_get_lra_per(da7281_handle_t *handle, uint16_t *lra_per);
 * @lra_freq : Value to be return
 */
 int8_t da7281_get_lra_freq(da7281_handle_t *handle, float *lra_freq);
+
+/*
+* @breif Set DRO Operation Mode
+* @handle : Device handle struct
+* @override_val : Override value
+*/
+int8_t da7281_set_dro_operation_mode(da7281_handle_t *handle, int8_t override_val);
+
+/*
+* @breif Set PWM Operation Mode
+* @handle : Device handle struct
+* @override_val : Override value
+*/
+int8_t da7281_set_pwm_operation_mode(da7281_handle_t *handle, int8_t override_val);
 
 
 

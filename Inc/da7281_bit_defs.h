@@ -26,10 +26,15 @@
 
 /*******************DA7281 BIT MASKING AND POSITIONS*******************************/
 #define DA7281_REG_ACTUATOR_X_BIT_POS           UINT8_C(0x00)
+#define DA7281_ZERO_BIT_POS                     UINT8_C(0x00)
 
-#define DA7281_LRA_PER_L_BITS                   UINT8_C(7)
+#define DA7281_LRA_PER_H_BITS                   UINT8_C(7)
 #define DA7281_V2I_FACTOR_H_BITS                UINT8_C(8)
 #define DA7281_7BIT_MASKING                     UINT8_C(0x7F)
+#define DA7281_1BIT_MASKING                     UINT8_C(0x01)
+#define DA7281_ACCELERATION_EN_BIT_POS          UINT8_C(0x02)
+#define DA7281_OPERATION_MODE_POS               UINT8_C(0)
+#define DA7281_OPERATION_MODE_MASK              (0x07 << DA7281_OPERATION_MODE_POS)
 
 /*
 *@breif Actuator Type Mode

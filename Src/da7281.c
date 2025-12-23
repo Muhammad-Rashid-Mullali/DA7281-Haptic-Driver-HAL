@@ -17,7 +17,7 @@ int8_t da7281_init(da7281_handle_t *handle)
     /****************Need to check the completion of boot after 1.5ms using Suitable Timing**************/
 
     /*Read Chip Rev Register*/
-    if(handle->iic_read(DA7281_REG_CHIP_REV, &chip_rev, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_CHIP_REV, &chip_rev, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
        if(chip_rev != DA7281_DEFAULT_CHIP_REV)
         {
@@ -26,7 +26,7 @@ int8_t da7281_init(da7281_handle_t *handle)
     }
 
     /* Read TOP CTL1 Register*/
-    if(handle->iic_read(DA7281_REG_TOP_CTL1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_SUCCESS)
+    if(handle->iic_read(DA7281_REG_TOP_CTL1, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_SUCCESS)
     {
         return DA7281_I2C_RET_ERROR;
     }
@@ -38,7 +38,7 @@ int8_t da7281_init(da7281_handle_t *handle)
     reg |= (DA7281_BIT_ENABLE << STANDBY_EN);
     
     /* Update TOP CTL1 Register*/
-    if(handle->iic_write(DA7281_REG_TOP_CTL1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_SUCCESS)
+    if(handle->iic_write(DA7281_REG_TOP_CTL1, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_SUCCESS)
     {
         return DA7281_I2C_RET_ERROR;
     }
@@ -56,7 +56,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
     }
 
     /* Read Status Register */
-    if(handle->iic_read(DA7281_REG_IRQ_STATUS1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_SUCCESS)
+    if(handle->iic_read(DA7281_REG_IRQ_STATUS1, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_SUCCESS)
     {
         return DA7281_I2C_RET_ERROR;
     }
@@ -88,7 +88,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
            /* Clear the Flag */
            uint8_t flag = NULL;
            flag |= (DA7281_BIT_ENABLE << E_OVERTEMP_CRIT);
-           handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+           handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
     }
 
     
@@ -98,7 +98,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
 
         da7281_irq_sequence_t seq;
 
-        if(handle->iic_read(DA7281_REG_IRQ_EVENT_SEQ_DIAG, (uint8_t *)&seq, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+        if(handle->iic_read(DA7281_REG_IRQ_EVENT_SEQ_DIAG, (uint8_t *)&seq, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
         {
             if(seq & (DA7281_BIT_ENABLE << E_PWM_FAULT))
             {
@@ -108,7 +108,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
                 /* Clear the Flag */
                 uint8_t flag = NULL;
                 flag |= (DA7281_BIT_ENABLE << E_SEQ_FAULT);
-                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
             }
 
             if(seq & (DA7281_BIT_ENABLE << E_MEM_FAULT))
@@ -120,7 +120,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
                 /* Clear the Flag */
                 uint8_t flag = NULL;
                 flag |= (DA7281_BIT_ENABLE << E_SEQ_FAULT);
-                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
             }
 
             if(seq & (DA7281_BIT_ENABLE << E_SEQ_ID_FAULT))
@@ -132,7 +132,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
                 /* Clear the Flag */
                 uint8_t flag = NULL;
                 flag |= (DA7281_BIT_ENABLE << E_SEQ_ID_FAULT);
-                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
             }
         }
     }
@@ -143,7 +143,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
 
         da7281_irq_warnings_t warning;
 
-        if(handle->iic_read(DA7281_REG_IRQ_EVENT_WARNING_DIAG, (uint8_t *)&warning, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+        if(handle->iic_read(DA7281_REG_IRQ_EVENT_WARNING_DIAG, (uint8_t *)&warning, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
         {
             if(warning & (DA7281_BIT_ENABLE << E_OVERTEMP_WARN))
             {
@@ -154,7 +154,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
                 /* Clear the flag */
                 uint8_t flag = NULL;
                 flag |= (DA7281_BIT_ENABLE << E_WARNING);
-                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
             }
 
             if(warning & (DA7281_BIT_ENABLE << E_MEM_TYPE))
@@ -162,27 +162,27 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
                 /* Indicates that the memory data type configured in register 
                 MEM_DATA_SIGNED does not match the ACCELERATION_EN */
                 da7281_top_cfg1_t accel_en;
-                if(handle->iic_read(DA7281_REG_TOP_CFG1, (uint8_t *)&accel_en, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+                if(handle->iic_read(DA7281_REG_TOP_CFG1, (uint8_t *)&accel_en, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
                 {
                     if(accel_en & (DA7281_BIT_ENABLE << ACCELERATION_EN) == DA7281_BOOL_TRUE)
                     {
                         /* ACCELERATION_EN = 1 So Write MEM_DATA_SIGNED = 0 */
                         accel_en = (DA7281_BIT_DISABLE << MEM_DATA_SIGNED);
-                        handle->iic_write(DA7281_REG_TOP_CFG2, (uint8_t *)&accel_en, DA7281_REG_BYTE);
+                        handle->iic_write(DA7281_REG_TOP_CFG2, (uint8_t *)&accel_en, DA7281_REG_BYTE_LEN);
                     }
 
                     else
                     {
                         /* ACCELERATION_EN = 0 So Write MEM_DATA_SIGNED = 1 */
                         accel_en = (DA7281_BIT_ENABLE << MEM_DATA_SIGNED);
-                        handle->iic_write(DA7281_REG_TOP_CFG2, (uint8_t *)&accel_en, DA7281_REG_BYTE);
+                        handle->iic_write(DA7281_REG_TOP_CFG2, (uint8_t *)&accel_en, DA7281_REG_BYTE_LEN);
                     }
                 }
 
                 /* Clear the flag */
                 uint8_t flag = NULL;
                 flag |= (DA7281_BIT_ENABLE << E_WARNING);
-                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
             }
 
             if(warning & (DA7281_BIT_ENABLE << E_LIM_DRIVE_ACC))
@@ -194,7 +194,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
                 /* Clear the Flag*/
                 uint8_t flag = NULL;
                 flag |= (DA7281_BIT_ENABLE << E_WARNING);
-                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
             }
 
             if(warning & (DA7281_BIT_ENABLE << E_LIM_DRIVE))
@@ -206,7 +206,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
                 /* Clear the Flag*/
                 uint8_t flag = NULL;
                 flag |= (DA7281_BIT_ENABLE << E_WARNING);
-                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE);
+                handle->iic_write(DA7281_REG_IRQ_EVENT1, (uint8_t*)&flag, DA7281_REG_BYTE_LEN);
             }
         }
 
@@ -224,7 +224,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
         /* Clear the Flag */
         uint8_t flag = NULL;
         flag |= (DA7281_BIT_ENABLE << E_ACTUATOR_FAULT);
-        handle->iic_write(DA7281_REG_IRQ_EVENT1, &flag, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_IRQ_EVENT1, &flag, DA7281_REG_BYTE_LEN);
     }
 
       if (reg & (DA7281_BIT_ENABLE << STA_OC))
@@ -235,7 +235,7 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
         /* Clear the flag */
         uint8_t flag = NULL;
         flag |= (DA7281_BIT_ENABLE << E_OC_FAULT);
-        handle->iic_write(DA7281_REG_IRQ_EVENT1, &flag, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_IRQ_EVENT1, &flag, DA7281_REG_BYTE_LEN);
     }
 
     return DA7281_OK;
@@ -253,12 +253,12 @@ int8_t da7281_select_actuator_type(da7281_handle_t *handle, bool type)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_TOP_CFG1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_TOP_CFG1, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << ACTUATOR_TYPE);
         reg |= (type << ACTUATOR_TYPE);
 
-        handle->iic_write(DA7281_REG_TOP_CFG1, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_TOP_CFG1, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else
@@ -281,12 +281,12 @@ int8_t da7281_set_actuator_nommax(da7281_handle_t *handle, uint8_t value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
         reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
 
-        handle->iic_write(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else
@@ -309,7 +309,7 @@ int8_t da7281_get_actuator_nommax(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_ACTUATOR1, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }
@@ -329,12 +329,12 @@ int8_t da7281_set_actuator_absmax(da7281_handle_t *handle, uint8_t value)
         return DA7281_RET_ERROR;
     }
 
-    if (handle->iic_read(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if (handle->iic_read(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
         reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
 
-        handle->iic_write(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else 
@@ -357,7 +357,7 @@ int8_t da7281_get_actuator_absmax(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_ACTUATOR2, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }
@@ -377,12 +377,12 @@ int8_t da7281_set_actuator_imax(da7281_handle_t *handle, uint8_t value)
         return DA7281_RET_ERROR;
     }
 
-    if (handle->iic_read(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if (handle->iic_read(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
         reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
 
-        handle->iic_write(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else
@@ -405,7 +405,7 @@ int8_t da7281_get_actuator_imax(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_ACTUATOR3, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }
@@ -430,12 +430,12 @@ int8_t da7281_set_v2i_factor_h(da7281_handle_t *handle, uint8_t value)
         return DA7281_RET_ERROR;
     }
 
-    if (handle->iic_read(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if (handle->iic_read(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
         reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
 
-        handle->iic_write(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else
@@ -458,7 +458,7 @@ int8_t da7281_get_v2i_factor_h(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_CALIB_V2I_H, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }
@@ -483,12 +483,12 @@ int8_t da7281_set_v2i_factor_l(da7281_handle_t *handle, uint8_t value)
         return DA7281_RET_ERROR;
     }
 
-    if (handle->iic_read(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if (handle->iic_read(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
         reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
 
-        handle->iic_write(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else
@@ -511,7 +511,7 @@ int8_t da7281_get_v2i_factor_l(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_CALIB_V2I_L, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }
@@ -591,12 +591,12 @@ int8_t da7281_set_lra_per_h(da7281_handle_t *handle, uint8_t value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
         reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS);
 
-        handle->iic_write(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else
@@ -619,7 +619,7 @@ int8_t da7281_get_lra_per_h(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_H, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }
@@ -644,12 +644,12 @@ int8_t da7281_set_lra_per_l(da7281_handle_t *handle, uint8_t value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         reg &= ~(DA7281_BIT_ENABLE << DA7281_REG_ACTUATOR_X_BIT_POS);
         reg |= (value << DA7281_REG_ACTUATOR_X_BIT_POS) & DA7281_7BIT_MASKING;
 
-        handle->iic_write(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE);
+        handle->iic_write(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE_LEN);
     }
 
     else
@@ -672,7 +672,7 @@ int8_t da7281_get_lra_per_l(da7281_handle_t *handle, uint8_t *value)
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE) != DA7281_I2C_RET_ERROR)
+    if(handle->iic_read(DA7281_REG_FRQ_LRA_PER_L, &reg, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
     {
         *value = reg;
     }
@@ -707,7 +707,7 @@ int8_t da7281_get_lra_per(da7281_handle_t *handle, uint16_t *lra_per)
         return DA7281_RET_ERROR;
     }
     
-    *lra_per = ((uint16_t) lra_per_h << DA7281_LRA_PER_L_BITS) | (lra_per_l & DA7281_7BIT_MASKING);
+    *lra_per = ((uint16_t) lra_per_h << DA7281_LRA_PER_H_BITS) | (lra_per_l & DA7281_7BIT_MASKING);
 
     return DA7281_OK;
 }
@@ -735,24 +735,47 @@ int8_t da7281_get_lra_freq(da7281_handle_t *handle, float *lra_freq)
 }
 
 /*
-*Set Override value for DRO Mode
+*MODE CONFIGURATION
 */
-int8_t da7281_set_override_val(da7281_handle_t *handle, uint8_t *override_val)
+
+int8_t da7281_set_dro_operation_mode(da7281_handle_t *handle, int8_t override_val)
 {
-    if(handle == NULL || override_val == NULL)
+    uint8_t accel_en;
+    da7281_operation_mode_t reg;
+
+    if (handle == NULL)
     {
         return DA7281_RET_ERROR;
     }
 
-}
+    /*Read ACCELERATION_EN configuration*/
+    if(handle->iic_read(DA7281_REG_TOP_CFG1, &accel_en, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
+    {
+        accel_en = ((accel_en >> DA7281_ACCELERATION_EN_BIT_POS) & DA7281_1BIT_MASKING);
+    }
 
-/*
-*MODE CONFIGURATION
-*/
+    if(accel_en)
+    {
+        if(override_val < 0)
+        {
+            return DA7281_RET_VALUE_ERROR;
+        }
+    }
 
-int8_t da7281_dro_operation_mode(da7281_handle_t *handle, uint8_t *value)
-{
+    if(handle->iic_write(DA7281_REG_TOP_CTL2, &override_val, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_SUCCESS)
+    {
+        return DA7281_RET_ERROR;
+    }
 
+    if(handle->iic_read(DA7281_REG_TOP_CTL1, (uint8_t *)&reg, DA7281_REG_BYTE_LEN) == DA7281_I2C_RET_SUCCESS)
+    {
+        reg &= ~(DA7281_OPERATION_MODE_MASK);
+        reg = DA7281_OPERATION_MODE_DRO;
+
+        handle->iic_write(DA7281_REG_TOP_CTL1, &reg, DA7281_REG_BYTE_LEN);
+    }
+
+    return DA7281_OK;
 }
 
 
