@@ -241,8 +241,11 @@ int8_t da7281_irq_handler(da7281_handle_t *handle)
     return DA7281_OK;
 }
 
+
+/*********************Actuator Setup Functions ******************/
+
 /*
-*Actuator Setup Functions
+*Select Actuator type
 */
 int8_t da7281_select_actuator_type(da7281_handle_t *handle, bool type)
 {
@@ -734,14 +737,15 @@ int8_t da7281_get_lra_freq(da7281_handle_t *handle, float *lra_freq)
     return DA7281_OK;
 }
 
-/*
-*MODE CONFIGURATION
-*/
 
+/*********************MODE CONFIGURATION***************************/
+/*
+*Set DRO Operation mode
+*/
 int8_t da7281_set_dro_operation_mode(da7281_handle_t *handle, int8_t override_val)
 {
     uint8_t accel_en;
-    da7281_operation_mode_t reg;
+    da7281_operation_mode_t op_mode = DA7281_OPERATION_MODE_INACTIVE;
 
     if (handle == NULL)
     {
@@ -767,16 +771,106 @@ int8_t da7281_set_dro_operation_mode(da7281_handle_t *handle, int8_t override_va
         return DA7281_RET_ERROR;
     }
 
-    if(handle->iic_read(DA7281_REG_TOP_CTL1, (uint8_t *)&reg, DA7281_REG_BYTE_LEN) == DA7281_I2C_RET_SUCCESS)
+    if(handle->iic_read(DA7281_REG_TOP_CTL1, (uint8_t *)&op_mode, DA7281_REG_BYTE_LEN) == DA7281_I2C_RET_SUCCESS)
     {
-        reg &= ~(DA7281_OPERATION_MODE_MASK);
-        reg = DA7281_OPERATION_MODE_DRO;
+        op_mode &= ~(DA7281_OPERATION_MODE_MASK);
+        op_mode = DA7281_OPERATION_MODE_DRO;
 
-        handle->iic_write(DA7281_REG_TOP_CTL1, &reg, DA7281_REG_BYTE_LEN);
+        handle->iic_write(DA7281_REG_TOP_CTL1, &op_mode, DA7281_REG_BYTE_LEN);
     }
 
     return DA7281_OK;
 }
+
+/*
+*Set PWM Operation mode
+*/
+int8_t da7281_set_pwm_operation_mode(da7281_handle_t *handle, int8_t *pwm_signal, da7281_brake_thr_t threshold)
+{
+    uint8_t accel_en;
+    uint16_t drive_level;
+    da7281_operation_mode_t op_mode = DA7281_OPERATION_MODE_INACTIVE;
+
+    if(handle == NULL || pwm_signal == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+
+    /*Read ACCELERATION_EN configuration*/
+    if(handle->iic_read(DA7281_REG_TOP_CFG1, &accel_en, DA7281_REG_BYTE_LEN) != DA7281_I2C_RET_ERROR)
+    {
+        accel_en = ((accel_en >> DA7281_ACCELERATION_EN_BIT_POS) & DA7281_1BIT_MASKING);
+    }
+
+    if (accel_en)
+    {
+        /* ACCELERATION_EN = 1: pwm_signal 0–100% */
+        if(*pwm_signal < 0 || *pwm_signal > 100)
+        {
+            return DA7281_RET_VALUE_ERROR;
+        }
+
+        uint8_t nomax;
+        da7281_get_actuator_nommax(handle, &nomax);
+        drive_level = (uint16_t)((*pwm_signal * nomax) / 100);
+    }
+
+    else
+    {
+        /* ACCELERATION_EN = 0: pwm_signal -100 to 100%, 50% = zero */
+        uint8_t absmax;
+        da7281_get_actuator_absmax(handle, &absmax);
+
+        if(*pwm_signal < -100 || *pwm_signal > 100)
+        {
+            return DA7281_RET_VALUE_ERROR;
+        }
+
+        if(*pwm_signal >= 0)
+        {
+            drive_level = (uint16_t)((*pwm_signal * absmax) / 100);
+        }
+
+        else
+        {
+            /* negative = phase/reverse */
+            drive_level = (uint16_t)((-*pwm_signal * absmax) / 100);
+        }
+
+        if (drive_level < threshold)
+        {
+            drive_level = 0;
+        }
+    }
+
+    if(handle->iic_read(DA7281_REG_TOP_CTL1, (uint8_t *)&op_mode, DA7281_REG_BYTE_LEN) == DA7281_I2C_RET_SUCCESS)
+    {
+        op_mode &= ~(DA7281_OPERATION_MODE_MASK);
+        op_mode = DA7281_OPERATION_MODE_PWM;
+
+        handle->iic_write(DA7281_REG_TOP_CTL1, &op_mode, DA7281_REG_BYTE_LEN);
+    }
+
+    return DA7281_OK;
+}
+
+/*
+*Set RTWM Operation Mode
+*/
+int8_t da7281_set_rtwm_operation_mode(da7281_handle_t *handle, uint8_t value)
+{
+    uint8_t reg;
+
+    if (handle == NULL)
+    {
+        return DA7281_RET_ERROR;
+    }
+    
+}
+
+
+
+
 
 
 
