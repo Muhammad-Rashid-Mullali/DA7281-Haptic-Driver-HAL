@@ -865,7 +865,6 @@ int8_t da7281_set_rtwm_operation_mode(da7281_handle_t *handle, uint8_t value)
     {
         return DA7281_RET_ERROR;
     }
-    
 }
 
 
