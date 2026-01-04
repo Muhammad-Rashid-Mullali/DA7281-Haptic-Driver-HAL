@@ -397,5 +397,12 @@ int8_t da7281_set_dro_operation_mode(da7281_handle_t *handle, int8_t override_va
 */
 int8_t da7281_set_pwm_operation_mode(da7281_handle_t *handle, int8_t override_val);
 
+/*
+* @breif Set RTWM Operation Mode
+* @handle : Device handle struct
+* @override_val : value to be return
+*/
+int8_t da7281_set_rtwm_operation_mode(da7281_handle_t *handle, uint8_t value);
+
 
 
