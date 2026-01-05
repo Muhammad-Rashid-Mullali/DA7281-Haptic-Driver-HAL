@@ -4,6 +4,10 @@
 *Header file for Waveform Memory Snippets related Registers
 */
 
+#define TOTAL_SNP_MEM_BYTES                 UINT8_C(100)
+#define TOTAL_SNP_MEM_SEQUENCE              UINT8_C(15)
+#define TOTAL_SNP_MEM_SNIPPET               UINT8_C(16)
+
 #define DA7281_REG_SNP_MEM_0                UINT8_C(0x84)
 #define DA7281_REG_SNP_MEM_1                UINT8_C(0x85)
 #define DA7281_REG_SNP_MEM_2                UINT8_C(0X86)
@@ -135,3 +139,4 @@ typedef enum{
     DA7281_SNP_TIMEBASE_10 =                 UINT8_C(0x02),
     DA7281_SNP_TIMEBASE_11 =                 UINT8_C(0x03)
 } da7281_snp_timebase_t;
+
