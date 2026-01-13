@@ -110,6 +110,16 @@
 #define DA7281_REG_SNP_MEM_99               UINT8_C(0xE7)
 
 
+/*Frame structure*/
+typedef struct da7281_frame
+{
+    uint8_t snippet_id;
+    uint8_t amplitude;
+    uint8_t times;
+}da7281_frame_t;
+
+
+
 /*
 *SNP Related Enumerations and BIT Definitions
 */
